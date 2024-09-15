@@ -45,6 +45,10 @@ jobs:
             echo "Aguardando a aplicação web estar disponível..."
             sleep 5
           done
+      
+      # Show logs (for debugging)
+      - name: Show API logs
+        run: docker-compose logs api
 
       # Step 6: Run tests
       - name: Run tests
