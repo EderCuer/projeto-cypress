@@ -36,8 +36,8 @@ services:
       DB_NAME: dbname
     ports:
       - "3333:3333"
-    volumes:
-      - ./apps/zombieplus/api:/usr/src/app
+    # volumes:
+    #   - ./apps/zombieplus/api:/usr/src/app
     networks:
       - zombieplus_network
 
