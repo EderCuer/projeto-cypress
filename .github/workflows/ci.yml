@@ -11,81 +11,28 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    name: Configuração da aplicação
+
     steps:
-      # Checkout o repositório
+      # Step 1: Checkout o repositório
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      # Set up Docker
+      # Step 2: Set up Docker
       - name: Set up Docker
         uses: docker/setup-buildx-action@v2
 
-      # Install Docker Compose
+      # Step 3: Install Docker Compose
       - name: Install Docker Compose
         run: |
           sudo curl -L "https://github.com/docker/compose/releases/download/v2.21.0/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
           sudo chmod +x /usr/local/bin/docker-compose
           docker-compose version
-      
-      # Save Docker Compose as an artifact
-      - name: Save Docker Compose
-        uses: actions/upload-artifact@v3
-        with:
-          name: docker-compose
-          path: /usr/local/bin/docker-compose
 
-      # Step 5: Build Docker Images
-      - name: Build Docker Images
-        run: /usr/local/bin/docker-compose build
+      # Step 4: Build and run Docker Compose
+      - name: Build and run Docker Compose
+        run: docker-compose up --build -d
 
-      # Step 6: Save Docker Image Cache
-      - name: Save Docker cache
-        uses: actions/cache@v3
-        with:
-          path: /tmp/.buildx-cache
-          key: ${{ runner.os }}-docker-${{ github.sha }}
-          restore-keys: |
-            ${{ runner.os }}-docker-
-
-  test:
-    runs-on: ubuntu-latest
-    name: Execução dos testes
-    needs: build
-    steps:
-      # Checkout do repositório
-      - name: Checkout repository
-        uses: actions/checkout@v3
-
-      # Set up Docker
-      - name: Set up Docker
-        uses: docker/setup-buildx-action@v2
-      
-      # Download Docker Compose artifact
-      - name: Download Docker Compose
-        uses: actions/download-artifact@v3
-        with:
-          name: docker-compose
-          path: /usr/local/bin
-      
-      # Make Docker Compose executable
-      - name: Make Docker Compose executable
-        run: sudo chmod +x /usr/local/bin/docker-compose
-
-      # Restore Docker Image Cache
-      - name: Restore Docker cache
-        uses: actions/cache@v3
-        with:
-          path: /tmp/.buildx-cache
-          key: ${{ runner.os }}-docker-${{ github.sha }}
-          restore-keys: |
-            ${{ runner.os }}-docker-
-
-      # Start Services
-      - name: Start Services
-        run: /usr/local/bin/docker-compose up -d
-
-      # Wait for services to be ready
+      # Step 5: Wait for services to be ready
       - name: Wait for API to be available
         run: |
           max_attempts=10
@@ -99,43 +46,15 @@ jobs:
             echo "Aguardando a API estar disponível... Tentativa $count de $max_attempts."
             sleep 5
           done
-      
-      - name: Show API logs
-        if: failure()
-        run: docker-compose logs api
 
-      # Install Project Dependencies
-      - name: Install dependencies
-        run: npm install
+      # Step 6: Install Cypress dependencies
+      - name: Install Cypress dependencies
+        run: npm install cypress --save-dev
 
-      # Run Cypress tests
+      # Step 7: Run Cypress tests
       - name: Run Cypress tests
         run: npx cypress run
 
-  teardown:
-    runs-on: ubuntu-latest
-    name: Teardown Services
-    needs: test
-    steps:
-      # Step 1: Checkout do repositório
-      - name: Checkout repository
-        uses: actions/checkout@v3
-
-      # Step 2: Set up Docker
-      - name: Set up Docker
-        uses: docker/setup-buildx-action@v2
-
-      # Step 3: Download Docker Compose artifact
-      - name: Download Docker Compose
-        uses: actions/download-artifact@v3
-        with:
-          name: docker-compose
-          path: /usr/local/bin
-
-      # Step 4: Make Docker Compose executable
-      - name: Make Docker Compose executable
-        run: sudo chmod +x /usr/local/bin/docker-compose
-
-      # Step 5: Stop and Remove Docker Containers
+      # Step 8: Tear down Docker Compose
       - name: Tear down Docker Compose
-        run: /usr/local/bin/docker-compose down
+        run: docker-compose down
