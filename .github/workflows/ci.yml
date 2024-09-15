@@ -21,15 +21,11 @@ jobs:
       - name: Set up Docker
         uses: docker/setup-buildx-action@v2
 
-      # Step 3: Set up Docker Compose
-      - name: Set up Docker Compose
-        uses: docker/compose-action@v2
-
-      # Step 4: Build and run Docker Compose
+      # Step 3: Build and run Docker Compose
       - name: Build and run Docker Compose
         run: docker-compose up --build -d
 
-      # Step 5: Wait for services to be ready
+      # Step 4: Wait for services to be ready
       - name: Wait for services to be ready
         run: |
           # Aguarda a API estar disponível
@@ -43,10 +39,10 @@ jobs:
             sleep 5
           done
 
-      # Step 6: Run tests
+      # Step 5: Run tests
       - name: Run tests
         run: docker-compose exec api npm test
 
-      # Step 7: Tear down Docker Compose
+      # Step 6: Tear down Docker Compose
       - name: Tear down Docker Compose
         run: docker-compose down
