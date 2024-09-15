@@ -58,6 +58,10 @@ jobs:
             echo "Aguardando a API estar disponível... Tentativa $count de $max_attempts."
             sleep 5
           done
+      
+      - name: Show API logs
+        if: failure()
+        run: docker-compose logs api
 
       # Run Cypress tests
       - name: Run Cypress tests
