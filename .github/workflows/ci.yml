@@ -27,30 +27,59 @@ jobs:
           sudo curl -L "https://github.com/docker/compose/releases/download/v2.21.0/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
           sudo chmod +x /usr/local/bin/docker-compose
           docker-compose version
-
-      # Build and run Docker Compose
-      - name: Build and run Docker Compose
-        run: docker-compose up --build -d
       
-      # Save Docker state for other jobs
-      - name: Set Docker Host output
-        run: echo "::set-output name=docker_host::tcp://localhost:2375"
-    outputs:
-      docker_host: ${{ steps.set-docker-host.outputs.docker_host }}
+      # Save Docker Compose as an artifact
+      - name: Save Docker Compose
+        uses: actions/upload-artifact@v3
+        with:
+          name: docker-compose
+          path: ./docker-compose
+
+      # Step 5: Build Docker Images
+      - name: Build Docker Images
+        run: ./docker-compose build
+
+      # Step 6: Save Docker Image Cache
+      - name: Save Docker cache
+        uses: actions/cache@v3
+        with:
+          path: /tmp/.buildx-cache
+          key: ${{ runner.os }}-docker-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-docker-
 
   test:
     runs-on: ubuntu-latest
     name: Execução dos testes
     needs: build
-    env:
-      DOCKER_HOST: ${{ needs.build.outputs.docker_host }}
     steps:
+      # Checkout do repositório
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      # Install Project Dependencies
-      - name: Install dependencies
-        run: npm install
+      # Set up Docker
+      - name: Set up Docker
+        uses: docker/setup-buildx-action@v2
+      
+      # Download Docker Compose artifact
+      - name: Download Docker Compose
+        uses: actions/download-artifact@v3
+        with:
+          name: docker-compose
+          path: ./
+
+      # Restore Docker Image Cache
+      - name: Restore Docker cache
+        uses: actions/cache@v3
+        with:
+          path: /tmp/.buildx-cache
+          key: ${{ runner.os }}-docker-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-docker-
+
+      # Start Services
+      - name: Start Services
+        run: docker-compose up -d
 
       # Wait for services to be ready
       - name: Wait for API to be available
@@ -71,6 +100,10 @@ jobs:
         if: failure()
         run: docker-compose logs api
 
+      # Install Project Dependencies
+      - name: Install dependencies
+        run: npm install
+
       # Run Cypress tests
       - name: Run Cypress tests
         run: npx cypress run
@@ -79,11 +112,20 @@ jobs:
     runs-on: ubuntu-latest
     name: Finalizar serviços
     needs: test
-    env:
-      DOCKER_HOST: ${{ needs.build.outputs.docker_host }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
+      
+      # Set up Docker
+      - name: Set up Docker
+        uses: docker/setup-buildx-action@v2
+      
+      # Download Docker Compose artifact
+      - name: Download Docker Compose
+        uses: actions/download-artifact@v3
+        with:
+          name: docker-compose
+          path: ./
 
       # Tear down Docker Compose
       - name: Tear down Docker Compose
