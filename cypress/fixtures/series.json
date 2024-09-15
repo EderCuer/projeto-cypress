@@ -1,0 +1,29 @@
+{
+  "big_bang_theory": {
+    "title": "The Big Bang Theory",
+    "overview": "A sitcom The Big Bang Theory conta a história de um grupo de amigos nerds, todos com personalidades e talentos diferentes, que vivem em Pasadena, na Califórnia",
+    "company": "Warner Bros. Pictures",
+    "release_year": 2007,
+    "seasons": 9,
+    "featured": false,
+    "cover": "./cypress/fixtures/images/big-bang-theory.jpg"
+  },
+  "game_of_thrones": {
+    "title": "Game of Thrones",
+    "overview": "Sucesso entre os livros mais vendidos, a série de obras 'A Song of Ice and Fire', de George R.R. Martin, é levada à tela quando HBO decide navegar a fundo pelo gênero e recriar a fantasia medieval épica.",
+    "company": "Warner Bros. Pictures",
+    "release_year": 2011,
+    "seasons": 8,
+    "featured": true,
+    "cover": "./cypress/fixtures/images/GoT.jpg"
+  },
+  "breaking_bad": {
+    "title": "Breaking Bad",
+    "overview": "O professor de química Walter White não acredita que sua vida possa piorar ainda mais. Quando descobre que tem câncer terminal, Walter decide arriscar tudo para ganhar dinheiro enquanto pode, transformando sua van em um laboratório de metanfetamina.",
+    "company": "Netflix",
+    "release_year": 2008,
+    "seasons": 5,
+    "featured": true,
+    "cover": "./cypress/fixtures/images/breaking-bad.jpg"
+  }
+}
