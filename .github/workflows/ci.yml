@@ -12,21 +12,6 @@ jobs:
   build:
     runs-on: ubuntu-latest
     name: Configuração da aplicação
-    services:
-      db:
-        image: postgres:13
-        env:
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: 1234
-          POSTGRES_DB: dbname
-        ports:
-          - 5432:5432
-        options: >-
-          --health-cmd "pg_isready -U postgres"
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
-
     steps:
       # Checkout o repositório
       - name: Checkout repository
@@ -48,15 +33,17 @@ jobs:
         run: docker-compose up --build -d
       
       # Save Docker state for other jobs
-      - name: Save Docker Host
-        run: echo "DOCKER_HOST=tcp://localhost:2375" >> $GITHUB_ENV
+      - name: Set Docker Host output
+        run: echo "::set-output name=docker_host::tcp://localhost:2375"
+    outputs:
+      docker_host: ${{ steps.set-docker-host.outputs.docker_host }}
 
   test:
     runs-on: ubuntu-latest
     name: Execução dos testes
     needs: build
     env:
-      DOCKER_HOST: ${{ env.DOCKER_HOST }}
+      DOCKER_HOST: ${{ needs.build.outputs.docker_host }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
@@ -93,7 +80,7 @@ jobs:
     name: Finalizar serviços
     needs: test
     env:
-      DOCKER_HOST: ${{ env.DOCKER_HOST }}
+      DOCKER_HOST: ${{ needs.build.outputs.docker_host }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
