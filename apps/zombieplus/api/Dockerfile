@@ -20,4 +20,4 @@ RUN npm install
 EXPOSE 3333
 
 # Define o script de entrada
-ENTRYPOINT ["/usr/src/app/entrypoint.sh"]
+ENTRYPOINT ["sh", "/usr/src/app/entrypoint.sh"]
