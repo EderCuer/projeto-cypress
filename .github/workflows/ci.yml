@@ -35,7 +35,7 @@ jobs:
       # Step 5: Wait for services to be ready
       - name: Wait for API to be available
         run: |
-          max_attempts=30
+          max_attempts=10
           count=0
           until curl --output /dev/null --silent --head --fail http://localhost:3333; do
             count=$((count + 1))
