@@ -47,15 +47,13 @@ jobs:
             sleep 5
           done
 
-      # Step 6: Show logs (for debugging if the API did not start)
-      - name: Show API logs
-        if: failure()
-        run: docker-compose logs api
+      # Step 6: Install Cypress dependencies
+      - name: Install Cypress dependencies
+        run: npm install cypress --save-dev
 
-      # Step 7: Run tests
-      - name: Run tests
-        if: success()
-        run: docker-compose exec api npm test
+      # Step 7: Run Cypress tests
+      - name: Run Cypress tests
+        run: npx cypress run
 
       # Step 8: Tear down Docker Compose
       - name: Tear down Docker Compose
