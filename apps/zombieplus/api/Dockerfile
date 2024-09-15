@@ -13,6 +13,9 @@ WORKDIR /usr/src/app
 # Copie os arquivos de configuração do Node.js
 COPY package*.json ./
 
+# Definir a variável de ambiente NODE_ENV para 'development'
+ENV NODE_ENV=development
+
 # Instalar as dependências (incluindo devDependencies)
 RUN npm install
 
