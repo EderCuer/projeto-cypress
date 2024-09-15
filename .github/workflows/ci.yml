@@ -33,11 +33,11 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: docker-compose
-          path: ./docker-compose
+          path: /usr/local/bin/docker-compose
 
       # Step 5: Build Docker Images
       - name: Build Docker Images
-        run: ./docker-compose build
+        run: /usr/local/bin/docker-compose build
 
       # Step 6: Save Docker Image Cache
       - name: Save Docker cache
@@ -66,7 +66,11 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: docker-compose
-          path: ./
+          path: /usr/local/bin
+      
+      # Make Docker Compose executable
+      - name: Make Docker Compose executable
+        run: sudo chmod +x /usr/local/bin/docker-compose
 
       # Restore Docker Image Cache
       - name: Restore Docker cache
@@ -79,7 +83,7 @@ jobs:
 
       # Start Services
       - name: Start Services
-        run: docker-compose up -d
+        run: /usr/local/bin/docker-compose up -d
 
       # Wait for services to be ready
       - name: Wait for API to be available
@@ -110,23 +114,28 @@ jobs:
 
   teardown:
     runs-on: ubuntu-latest
-    name: Finalizar serviços
+    name: Teardown Services
     needs: test
     steps:
+      # Step 1: Checkout do repositório
       - name: Checkout repository
         uses: actions/checkout@v3
-      
-      # Set up Docker
+
+      # Step 2: Set up Docker
       - name: Set up Docker
         uses: docker/setup-buildx-action@v2
-      
-      # Download Docker Compose artifact
+
+      # Step 3: Download Docker Compose artifact
       - name: Download Docker Compose
         uses: actions/download-artifact@v3
         with:
           name: docker-compose
-          path: ./
+          path: /usr/local/bin
 
-      # Tear down Docker Compose
+      # Step 4: Make Docker Compose executable
+      - name: Make Docker Compose executable
+        run: sudo chmod +x /usr/local/bin/docker-compose
+
+      # Step 5: Stop and Remove Docker Containers
       - name: Tear down Docker Compose
-        run: docker-compose down
+        run: /usr/local/bin/docker-compose down
