@@ -1,5 +1,5 @@
 # Use a imagem base do Node.js
-FROM node:19
+FROM node:20
 
 # Instalar netcat (necessário para o script wait-for.sh)
 RUN apt-get update && apt-get install -y netcat
