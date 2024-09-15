@@ -4,6 +4,9 @@ FROM node:19
 # Instalar netcat (necessário para o script wait-for.sh)
 RUN apt-get update && apt-get install -y netcat
 
+# Instalar nodemon globalmente
+RUN npm install -g nodemon
+
 # Defina o diretório de trabalho
 WORKDIR /usr/src/app
 
