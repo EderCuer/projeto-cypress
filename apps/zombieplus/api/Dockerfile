@@ -17,7 +17,7 @@ RUN npm install
 COPY . .
 
 # Adicionar permissão de execução para os scripts
-RUN chmod +x ./wait-for.sh ./db.sh ./entrypoint.sh
+RUN chmod +x ./entrypoint.sh ./wait-for.sh ./db.sh
 
 # Exponha a porta da API
 EXPOSE 3333
