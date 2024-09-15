@@ -17,10 +17,10 @@ RUN npm install
 COPY . .
 
 # Adicionar permissão de execução para os scripts
-RUN chmod +x ./entrypoint.sh ./wait-for.sh ./db.sh
+RUN chmod +x /usr/src/app/entrypoint.sh /usr/src/app/wait-for.sh /usr/src/app/db.sh
 
 # Exponha a porta da API
 EXPOSE 3333
 
 # Define o script de entrada
-ENTRYPOINT ["./entrypoint.sh"]
+ENTRYPOINT ["/usr/src/app/entrypoint.sh"]
