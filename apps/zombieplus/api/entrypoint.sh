@@ -1,5 +1,8 @@
 #!/bin/sh
 
+# Adicionar o caminho do npm global ao PATH
+export PATH=/usr/local/bin:$PATH
+
 # Aplicar permissões aos scripts
 chmod +x /usr/src/app/wait-for.sh /usr/src/app/db.sh
 

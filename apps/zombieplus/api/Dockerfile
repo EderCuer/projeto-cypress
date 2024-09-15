@@ -7,17 +7,18 @@ RUN apt-get update && apt-get install -y netcat
 # Defina o diretório de trabalho
 WORKDIR /usr/src/app
 
-# Copie os arquivos de configuração do Node.js
+# Copiar os arquivos de configuração do Node.js
 COPY package*.json ./
 
-# Definir a variável de ambiente NODE_ENV para 'development'
+# Limpar o cache do npm e definir o ambiente como development
+RUN npm cache clean --force
 ENV NODE_ENV=development
 
-# Forçar a instalação de todas as dependências, incluindo as de desenvolvimento
-RUN npm install --include=dev
+# Instalar as dependências
+RUN npm install
 
-# Verificar as dependências instaladas
-RUN ls -la node_modules && ls -la node_modules/sucrase
+# Instalar nodemon globalmente
+RUN npm install -g nodemon
 
 # Copiar o restante do código da aplicação
 COPY . .
