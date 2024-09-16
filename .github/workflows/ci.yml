@@ -46,7 +46,7 @@ jobs:
         run: npm install
 
       - name: Execução dos testes
-        run: npx cypress run
+        run: npm run cy:regression
 
       - name: Finalizar docker
         run: docker-compose down
