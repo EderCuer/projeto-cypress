@@ -6,7 +6,6 @@ describe('Séries', () => {
 
   before(() => {
     cy.setToken()
-    // Comando que limpa a tabela movies
     cy.exec(`node ./cypress/support/scripts/cleanDatabase.js tvshows`, { failOnNonZeroExit: false })
   })
 

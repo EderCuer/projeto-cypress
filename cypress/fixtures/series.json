@@ -25,5 +25,14 @@
     "seasons": 5,
     "featured": true,
     "cover": "./cypress/fixtures/images/breaking-bad.jpg"
+  },
+  "o_mundo_sombrio_de_sabrina": {
+    "title": "O Mundo Sombrio de Sabrina",
+    "overview": "Sabrina Spellman luta com sua natureza dupla - metade bruxa, metade mortal - enquanto se levanta contra as forças do mal que a ameaçam, sua família e o mundo humano.",
+    "company": "Netflix",
+    "release_year": 2018,
+    "seasons": 1,
+    "featured": true,
+    "cover": "./cypress/fixtures/images/sabrina.jpg"
   }
 }

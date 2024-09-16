@@ -26,7 +26,7 @@ describe('Leads', () => {
     const name = faker.person.fullName()
     const email = faker.internet.email()
 
-    cy.postLead(name, email)
+    cy.postLead(email, name)
 
     // Act
     cy.visit('/')

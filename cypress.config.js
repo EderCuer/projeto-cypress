@@ -9,6 +9,7 @@ module.exports = defineConfig({
   },
   env: {
     user: 'admin@zombieplus.com',
-    pass: 'pwd123'
+    pass: 'pwd123',
+    API_URL: 'http://localhost:3333'
   }
 });
