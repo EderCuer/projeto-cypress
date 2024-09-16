@@ -1,5 +1,8 @@
 #!/bin/sh
 
+# Sai imediatamente se ocorrer qualquer erro
+set -e
+
 # Adicionar o caminho do npm global ao PATH
 export PATH=/usr/local/bin:$PATH
 

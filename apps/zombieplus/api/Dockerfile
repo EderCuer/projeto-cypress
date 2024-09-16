@@ -2,7 +2,7 @@
 FROM node:19
 
 # Instalar netcat (necessário para o script wait-for.sh)
-RUN apt-get update && apt-get install -y netcat
+RUN apt-get update && apt-get install -y netcat coreutils
 
 # Defina o diretório de trabalho
 WORKDIR /usr/src/app
