@@ -58,11 +58,18 @@ No back-end temos os endpoints:
 
 Para a melhor organização do projeto, foram utilizados alguns padrões de projeto e boas práticas no desenvolvimentos dos scripts de teste.
 
-Na escrita dos testes Web foi utilizada a técnica [Four-Phase Test](https://thoughtbot.com/blog/four-phase-test) para melhor visualização e entendimento do código. 
+Na escrita dos testes Web foi utilizada a técnica [Four-Phase Test](https://thoughtbot.com/blog/four-phase-test) para melhor visualização e entendimento do código.
 
-Além disso, também foi utilizado o padrão de projeto [Application Actions](https://www.cypress.io/blog/stop-using-page-objects-and-start-using-app-actions). A abordagem segue um modelo parecido com o Page Objects e também é mais indicado para o Cypress.
+![padrão four-phase test](https://i.ibb.co/CPwnS68/Captura-de-tela-2024-09-17-065950.png)
+
+Além disso, também foi utilizado o padrão de projeto [Application Actions](https://www.cypress.io/blog/stop-using-page-objects-and-start-using-app-actions). A abordagem segue um modelo parecido com o Page Objects e também é mais indicado para o Cypress. Também foram criados arquivos contendo os elementos de cada página para que não haja duplicação de código, evitando assim complexidade na manutenção do código posteriormente.
 
 O projeto foi desenvolvido para que suas funções sejam reutilizáveis entre os cenários, tornando o código limpo e de fácil leitura.
+
+![app actions](https://i.ibb.co/MRFBd4x/Captura-de-tela-2024-09-17-070506.png)
+
+![mapeamento dos elementos](https://i.ibb.co/2hgjGQK/Captura-de-tela-2024-09-17-070551.png)
+
 
 ## Executando os testes
 

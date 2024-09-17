@@ -15,8 +15,8 @@ Cypress.Commands.add('setToken', () => {
     method: 'POST',
     url: `${Cypress.env('API_URL')}/sessions`,
     body: {
-      email: 'admin@zombieplus.com',
-      password: 'pwd123'
+      email: Cypress.env('user'),
+      password: Cypress.env('pass')
     }
   }).then((response) => {
     const token = response.body.token
