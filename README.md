@@ -39,6 +39,38 @@ Após clonar o projeto, inicie o Docker (caso seja o Docker Desktop), acesse a p
 
 Quando os três containers estiverem executando, acesso `http://localhost/3000/admin/login` e verifique se o ambiente está ok. Faça o login para garantir que tudo está funcionando corretamente (user: admin@zombiplus.com, senha: pwd123).
 
+## Cenários cobertos
+
+Os testes cobrem tanto cenários de front-end quanto de back-end. No front-end temos as features:
+- Login
+- Leads
+- Filmes
+- Séries
+
+No back-end temos os endpoints:
+- sessions
+- leads
+- companies
+- movies
+- tvshows
+
+### Padrões utilizados
+
+Para a melhor organização do projeto, foram utilizados alguns padrões de projeto e boas práticas no desenvolvimentos dos scripts de teste.
+
+Na escrita dos testes Web foi utilizada a técnica [Four-Phase Test](https://thoughtbot.com/blog/four-phase-test) para melhor visualização e entendimento do código.
+
+![padrão four-phase test](https://i.ibb.co/CPwnS68/Captura-de-tela-2024-09-17-065950.png)
+
+Além disso, também foi utilizado o padrão de projeto [Application Actions](https://www.cypress.io/blog/stop-using-page-objects-and-start-using-app-actions). A abordagem segue um modelo parecido com o Page Objects e também é mais indicado para o Cypress. Também foram criados arquivos contendo os elementos de cada página para que não haja duplicação de código, evitando assim complexidade na manutenção do código posteriormente.
+
+O projeto foi desenvolvido para que suas funções sejam reutilizáveis entre os cenários, tornando o código limpo e de fácil leitura.
+
+![app actions](https://i.ibb.co/MRFBd4x/Captura-de-tela-2024-09-17-070506.png)
+
+![mapeamento dos elementos](https://i.ibb.co/2hgjGQK/Captura-de-tela-2024-09-17-070551.png)
+
+
 ## Executando os testes
 
 Após a configuração do ambiente, dentro do projeto, execute:
