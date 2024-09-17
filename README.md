@@ -18,6 +18,8 @@ Para a automação foi utilizado o framework [Cypress.io](https://docs.cypress.i
 - **pg** (v8.12.0): biblioteca para integração do Cypress com o PostgreSQL
 
 Para a configuração do ambiente de testes:
+- **Node.js** (v19.1.0)
+- **Npm** (8.19.3)
 - **Docker Desktop** (v20.10.21)
 - **Docker compose** (v2.13.0)
 - **Aplicação Zombie+**
@@ -25,7 +27,7 @@ Para a configuração do ambiente de testes:
 
 ## Configuração do ambiente
 
-Primeiramente, instale o Docker e o Docker Compose. Após a instalação, clone o projeto no diretório de sua escolha. Abra o terminal e digite:
+Primeiramente, instale o Docker, o Docker Compose e o Node. Após a instalação, clone o projeto no diretório de sua escolha. Abra o terminal e digite:
 
 `git clone git@github.com:EderCuer/projeto-cypress.git`
 
