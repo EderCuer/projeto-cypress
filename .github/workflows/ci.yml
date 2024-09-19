@@ -13,6 +13,13 @@ jobs:
   testes:
     runs-on: ubuntu-latest
 
+    services:
+      sonarqube:
+        image: sonarqube:lts
+        ports:
+          - 9000:9000
+        options: --health-cmd='curl -s http://localhost:9000/api/system/health | grep -q "GREEN"' --health-interval=10s --health-timeout=5s --health-retries=50
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -48,6 +55,16 @@ jobs:
 
       - name: Execução dos testes
         run: npm run cy:regression
+      
+      - name: Analisar código com SonarQube
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        run: |
+          sonar-scanner \
+            -Dsonar.projectKey=projeto-cypress \
+            -Dsonar.sources=./cypress \
+            -Dsonar.host.url=http://localhost:9000 \
+            -Dsonar.login=$SONAR_TOKEN
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
