@@ -46,6 +46,21 @@ jobs:
             sleep 5
           done
 
+      - name: Instalação do Sonar Scanner
+        run: |
+          # Baixar o Sonar Scanner
+          wget https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-4.8.0.2856-linux.zip
+          
+          # Descompactar o Sonar Scanner
+          unzip sonar-scanner-cli-4.8.0.2856-linux.zip
+          
+          # Mover para /opt para facilitar o uso
+          sudo mv sonar-scanner-4.8.0.2856-linux /opt/sonar-scanner
+          
+          # Adicionar ao PATH
+          echo 'export PATH=$PATH:/opt/sonar-scanner/bin' >> ~/.bashrc
+          source ~/.bashrc
+
       - name: Instalação das dependências
         run: npm install
 
