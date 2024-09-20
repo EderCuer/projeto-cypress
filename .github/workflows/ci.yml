@@ -16,7 +16,7 @@ jobs:
       sonarqube:
         image: sonarqube:lts
         ports:
-          - 9000:9000
+          - 9001:9000
 
     steps:
       - name: Checkout repository
@@ -31,6 +31,9 @@ jobs:
           sudo chmod +x /usr/local/bin/docker-compose
           docker-compose version
 
+      - name: Remover containers antigos
+        run: docker-compose down
+
       - name: Inicialização da aplicação
         run: docker-compose up --build -d
       
@@ -38,7 +41,7 @@ jobs:
         run: |
           max_attempts=10
           count=0
-          until curl --silent --fail http://localhost:9000/api/system/health | grep -q 'GREEN'; do
+          until curl --silent --fail http://localhost:9001/api/system/health | grep -q 'GREEN'; do
             count=$((count + 1))
             if [ $count -ge $max_attempts ]; then
               echo "O SonarQube não ficou disponível após $max_attempts tentativas."
@@ -75,7 +78,7 @@ jobs:
           sonar-scanner \
             -Dsonar.projectKey=projeto-cypress \
             -Dsonar.sources=./cypress \
-            -Dsonar.host.url=http://localhost:9000 \
+            -Dsonar.host.url=http://localhost:9001 \
             -Dsonar.login=$SONAR_TOKEN
 
       - name: Deploy to GitHub Pages
