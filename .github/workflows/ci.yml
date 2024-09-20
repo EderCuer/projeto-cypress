@@ -58,8 +58,7 @@ jobs:
           sudo mv sonar-scanner-4.8.0.2856-linux /opt/sonar-scanner
           
           # Adicionar ao PATH
-          echo 'export PATH=$PATH:/opt/sonar-scanner/bin' >> ~/.bashrc
-          source ~/.bashrc
+          echo 'export PATH=/opt/sonar-scanner/bin:$PATH' >> $GITHUB_ENV
 
       - name: Instalação das dependências
         run: npm install
