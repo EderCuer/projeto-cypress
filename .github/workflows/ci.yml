@@ -46,18 +46,19 @@ jobs:
             sleep 5
           done
 
-      - name: Instalação das dependências
-        run: npm install
-
       - name: Análise de Código com SonarCloud
+        uses: sonarsource/sonarcloud-github-action@master
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
-        run: |
-          sonar-scanner \
-            -Dsonar.projectKey=EderCuer_projeto-cypress \
-            -Dsonar.organization=edercuer \
-            -Dsonar.host.url=https://sonarcloud.io \
-            -Dsonar.login=$SONAR_TOKEN
+        with:
+          args: >
+            -Dsonar.projectKey=EderCuer_projeto-cypress
+            -Dsonar.organization=edercuer
+            -Dsonar.host.url=https://sonarcloud.io
+            -Dsonar.login=${{ secrets.SONAR_TOKEN }}
+
+      - name: Instalação das dependências
+        run: npm install
 
       - name: Execução dos testes
         run: npm run cy:regression
