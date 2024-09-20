@@ -18,7 +18,11 @@ jobs:
         image: sonarqube:lts
         ports:
           - 9000:9000
-        options: --health-cmd='curl -s http://localhost:9000/api/system/health | grep -q "GREEN"' --health-interval=10s --health-timeout=5s --health-retries=50
+         options: >
+          --health-cmd="curl -s http://localhost:9000/api/system/health | grep -q 'GREEN'" 
+          --health-interval=10s 
+          --health-timeout=5s 
+          --health-retries=50
 
     steps:
       - name: Checkout repository
