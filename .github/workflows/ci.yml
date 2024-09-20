@@ -12,11 +12,6 @@ on:
 jobs:
   testes:
     runs-on: ubuntu-latest
-    services:
-      sonarqube:
-        image: sonarqube:lts
-        ports:
-          - 9001:9000
 
     steps:
       - name: Checkout repository
@@ -36,20 +31,6 @@ jobs:
 
       - name: Inicialização da aplicação
         run: docker-compose up --build -d
-      
-      - name: Verificar SonarQube
-        run: |
-          max_attempts=10
-          count=0
-          until curl --silent --fail http://localhost:9001/api/system/health | grep -q 'GREEN'; do
-            count=$((count + 1))
-            if [ $count -ge $max_attempts ]; then
-              echo "O SonarQube não ficou disponível após $max_attempts tentativas."
-              exit 1
-            fi
-            echo "Aguardando o SonarQube estar disponível... Tentativa $count de $max_attempts."
-            sleep 5
-          done
 
       - name: Esperar API ficar disponível
         run: |
@@ -68,18 +49,18 @@ jobs:
       - name: Instalação das dependências
         run: npm install
 
-      - name: Execução dos testes
-        run: npm run cy:regression
-      
-      - name: Analisar código com SonarQube
+      - name: Análise de Código com SonarCloud
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: |
           sonar-scanner \
             -Dsonar.projectKey=projeto-cypress \
-            -Dsonar.sources=./cypress \
-            -Dsonar.host.url=http://localhost:9001 \
+            -Dsonar.organization=edercuer \
+            -Dsonar.host.url=https://sonarcloud.io \
             -Dsonar.login=$SONAR_TOKEN
+
+      - name: Execução dos testes
+        run: npm run cy:regression
 
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v3
