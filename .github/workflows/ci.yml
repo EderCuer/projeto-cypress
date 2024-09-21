@@ -26,13 +26,13 @@ jobs:
           sudo chmod +x /usr/local/bin/docker-compose
           docker-compose version
 
-      - name: **Configuração do Ambiente** - Remover containers antigos
+      - name: Configuração do Ambiente - Remover containers antigos
         run: docker-compose down
 
-      - name: **Configuração do Ambiente** - Iniciar a aplicação
+      - name: Configuração do Ambiente - Iniciar a aplicação
         run: docker-compose up --build -d
 
-      - name: **Configuração do Ambiente** - Verificar se a API está disponível
+      - name: Configuração do Ambiente - Verificar se a API está disponível
         run: |
           max_attempts=10
           count=0
@@ -46,7 +46,7 @@ jobs:
             sleep 5
           done
 
-      - name: **Execução dos Testes** - Análise de Código com SonarCloud
+      - name: Execução dos Testes - Análise de Código com SonarCloud
         uses: sonarsource/sonarcloud-github-action@master
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
@@ -57,11 +57,11 @@ jobs:
             -Dsonar.host.url=https://sonarcloud.io
             -Dsonar.login=${{ secrets.SONAR_TOKEN }}
 
-      - name: **Execução dos Testes** - Instalar dependências
+      - name: Execução dos Testes - Instalar dependências
         run: npm install
 
-      - name: **Execução dos Testes** - Executar testes
+      - name: Execução dos Testes - Executar testes
         run: npm run cy:regression
 
-      - name: **Teardown** - Finalizar containers e limpar ambiente
+      - name: Teardown - Finalizar containers e limpar ambiente
         run: docker-compose down
