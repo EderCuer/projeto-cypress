@@ -26,6 +26,9 @@ jobs:
           sudo chmod +x /usr/local/bin/docker-compose
           docker-compose version
 
+      - name: Remover containers antigos
+        run: docker-compose down
+
       - name: Inicialização da aplicação
         run: docker-compose up --build -d
 
@@ -42,6 +45,17 @@ jobs:
             echo "Aguardando a API estar disponível... Tentativa $count de $max_attempts."
             sleep 5
           done
+
+      - name: Análise de Código com SonarCloud
+        uses: sonarsource/sonarcloud-github-action@master
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+        with:
+          args: >
+            -Dsonar.projectKey=EderCuer_projeto-cypress
+            -Dsonar.organization=edercuer
+            -Dsonar.host.url=https://sonarcloud.io
+            -Dsonar.login=${{ secrets.SONAR_TOKEN }}
 
       - name: Instalação das dependências
         run: npm install

@@ -58,6 +58,7 @@ services:
     command: npm run dev
     networks:
       - zombieplus_network
+  
 
 networks:
   zombieplus_network:
