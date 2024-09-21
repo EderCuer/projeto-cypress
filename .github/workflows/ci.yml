@@ -1,4 +1,4 @@
-name: CI
+name: Pipeline Testes
 
 on:
   push:
@@ -10,7 +10,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  testes:
+  run_tests:
     runs-on: ubuntu-latest
 
     steps:
@@ -20,19 +20,19 @@ jobs:
       - name: Set up Docker
         uses: docker/setup-buildx-action@v3
 
-      - name: Instalação docker compose
+      - name: Instalar Docker Compose
         run: |
           sudo curl -L "https://github.com/docker/compose/releases/download/v2.21.0/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
           sudo chmod +x /usr/local/bin/docker-compose
           docker-compose version
 
-      - name: Remover containers antigos
+      - name: Configuração do Ambiente - Remover containers antigos
         run: docker-compose down
 
-      - name: Inicialização da aplicação
+      - name: Configuração do Ambiente - Iniciar a aplicação
         run: docker-compose up --build -d
 
-      - name: Esperar API ficar disponível
+      - name: Configuração do Ambiente - Verificar se a API está disponível
         run: |
           max_attempts=10
           count=0
@@ -46,7 +46,7 @@ jobs:
             sleep 5
           done
 
-      - name: Análise de Código com SonarCloud
+      - name: Execução dos Testes - Análise de Código com SonarCloud
         uses: sonarsource/sonarcloud-github-action@master
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
@@ -57,18 +57,11 @@ jobs:
             -Dsonar.host.url=https://sonarcloud.io
             -Dsonar.login=${{ secrets.SONAR_TOKEN }}
 
-      - name: Instalação das dependências
+      - name: Execução dos Testes - Instalar dependências
         run: npm install
 
-      - name: Execução dos testes
+      - name: Execução dos Testes - Executar testes
         run: npm run cy:regression
 
-      - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v3
-        with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./cypress/reports
-          publish_branch: gh-pages
-
-      - name: Finalizar docker
+      - name: Teardown - Finalizar containers e limpar ambiente
         run: docker-compose down
