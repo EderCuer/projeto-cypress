@@ -62,6 +62,13 @@ jobs:
 
       - name: Execução dos Testes - Executar testes
         run: npm run cy:regression
+      
+      - name: Deploy to GitHub Pages - Gerar e publicar relatório
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./cypress/reports
+          publish_branch: gh-pages
 
       - name: Teardown - Finalizar containers e limpar ambiente
         run: docker-compose down
