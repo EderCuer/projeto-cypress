@@ -43,6 +43,20 @@ jobs:
           docker-compose ps
           docker-compose ps api
           
+      - name: Esperar API ficar disponível (10 tentativas)
+        run: |
+          max_attempts=10
+          count=0
+          until curl --output /dev/null --silent --head --fail http://localhost:3333; do
+            count=$((count + 1))
+            if [ $count -ge $max_attempts ]; then
+              echo "A API não ficou disponível após $max_attempts tentativas."
+              exit 1
+            fi
+            echo "Aguardando a API estar disponível... Tentativa $count de $max_attempts."
+            sleep 5
+          done
+
   tests:
     runs-on: ubuntu-latest
     needs: setup # Depende do job de setup
@@ -60,7 +74,7 @@ jobs:
           sudo chmod +x /usr/local/bin/docker-compose
           docker-compose version
 
-      - name: Esperar API ficar disponível
+      - name: Verificar status da API novamente
         run: |
           max_attempts=10
           count=0
