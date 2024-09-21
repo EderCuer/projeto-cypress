@@ -10,16 +10,9 @@ on:
   workflow_dispatch:
 
 jobs:
-  setup:
+  ci:
     runs-on: ubuntu-latest
-    services:
-      docker:
-        image: docker:19.03.12
-        options: --privileged
 
-    outputs:
-      network_id: ${{ steps.network_id.outputs.network }}
-      
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -27,28 +20,19 @@ jobs:
       - name: Set up Docker
         uses: docker/setup-buildx-action@v3
 
-      - name: Instalação docker compose
+      - name: Instalar Docker Compose
         run: |
           sudo curl -L "https://github.com/docker/compose/releases/download/v2.21.0/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
           sudo chmod +x /usr/local/bin/docker-compose
           docker-compose version
 
-      - name: Criar rede Docker compartilhada
-        id: network_id
-        run: |
-          docker network create my_shared_network
-          echo "::set-output name=network::my_shared_network"
+      - name: **Configuração do Ambiente** - Remover containers antigos
+        run: docker-compose down
 
-      - name: Inicializar a aplicação no Docker com rede compartilhada
-        run: |
-          docker-compose up --build -d
+      - name: **Configuração do Ambiente** - Iniciar a aplicação
+        run: docker-compose up --build -d
 
-      - name: Verificar se o container API está em execução
-        run: |
-          docker-compose ps
-          docker-compose ps api
-
-      - name: Esperar API ficar disponível (10 tentativas)
+      - name: **Configuração do Ambiente** - Verificar se a API está disponível
         run: |
           max_attempts=10
           count=0
@@ -62,37 +46,7 @@ jobs:
             sleep 5
           done
 
-  tests:
-    runs-on: ubuntu-latest
-    services:
-      docker:
-        image: docker:19.03.12
-        options: --privileged
-
-    needs: setup # Depende do job de setup
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Set up Docker
-        uses: docker/setup-buildx-action@v3
-
-      - name: Verificar status da API novamente
-        run: |
-          max_attempts=10
-          count=0
-          until curl --output /dev/null --silent --head --fail http://localhost:3333; do
-            count=$((count + 1))
-            if [ $count -ge $max_attempts ]; then
-              echo "A API não ficou disponível após $max_attempts tentativas."
-              exit 1
-            fi
-            echo "Aguardando a API estar disponível... Tentativa $count de $max_attempts."
-            sleep 5
-          done
-
-      - name: Análise de Código com SonarCloud
+      - name: **Execução dos Testes** - Análise de Código com SonarCloud
         uses: sonarsource/sonarcloud-github-action@master
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
@@ -103,21 +57,11 @@ jobs:
             -Dsonar.host.url=https://sonarcloud.io
             -Dsonar.login=${{ secrets.SONAR_TOKEN }}
 
-      - name: Instalação das dependências
+      - name: **Execução dos Testes** - Instalar dependências
         run: npm install
 
-      - name: Execução dos testes
+      - name: **Execução dos Testes** - Executar testes
         run: npm run cy:regression
 
-  teardown:
-    runs-on: ubuntu-latest
-    needs: tests # Depende do job de testes
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Finalizar containers e remover rede
-        run: |
-          docker-compose down
-          docker network rm my_shared_network
+      - name: **Teardown** - Finalizar containers e limpar ambiente
+        run: docker-compose down
