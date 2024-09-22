@@ -1,9 +1,9 @@
 
-# Projeto de automação Cypress + Docker
+# Projeto de automação com Cypress, Docker e SonarQube
 
 O Zombie+ é uma aplicação que simula uma plataforma de streaming que ainda não foi lançada. No sistema atual, as pessoas podem se cadastrar para receberem uma oferta quando a aplicação for lançada. Além disso, o administrador consegue cadastrar filmes, séries e gerenciar os leads.
 
-Esse projeto tem como intuito mostrar como utilizar a automação de testes utilizando o Cypress e configurando um ambiente de testes simulando o ambiente de produção. Esse projeto está integrado com um bando de dados.
+Esse projeto tem como intuito mostrar como utilizar a automação de testes utilizando o Cypress e configurando um ambiente de testes simulando o ambiente de produção. Além disso, também foi configurado para que o Sonar verifique a qualidade do código dos testes.
 
 Você vai encontrar um projeto de teste que cobre cenários de front-end e back-end, além de integrações diretas com o banco de dados para gerenciar a massa de teste.
 
@@ -34,6 +34,10 @@ Primeiramente, instale o Docker, o Docker Compose e o Node. Após a instalação
 Antes de subirmos o ambiente com o Docker, precisamos fazer um pequeno ajuste para evitar erros no buil do projeto. No diretório `projeto-cypress/apps/zombieplus/api`, verifique se a formatação dos arquivos `db.sh`, `entrypoint.sh` e `wait-for.sh` estão em formato LF (pode ocorrer de estarem CRLF).
 
 ![formatação](https://i.ibb.co/QCkwkmB/crlf-lf.png)
+
+No VSCode, clique no local indicado acima. Na caixa de seleção que irá aparecer, selecione a opção LF.
+
+![formatação LF](https://i.ibb.co/mTzNypm/Captura-de-tela-2024-09-22-202030.png)
 
 Após clonar o projeto, inicie o Docker (caso seja o Docker Desktop), acesse a pasta do projeto e digite:
 
@@ -107,3 +111,16 @@ O relatório está integrado com o Github Pages, então a cada nova execução �
 ![deploy](https://i.ibb.co/QJvvVBB/deploy.png)
 
 ![relatório online](https://i.ibb.co/PjQqc0R/relatorio-online.png)
+
+### Steps da pipeline
+
+A pipeline é executada em 9 etapas:
+
+![etapas da pipeline](https://i.ibb.co/ZJ22SG6/Captura-de-tela-2024-09-22-201258.png)
+
+### SonarQube
+
+Utilizei o SonarCloud para hospedar um projeto exemplo para visualizarmos o resultado da análise da qualidade do código. Após a finalização da execução, podemos acessar o projeto no [SonarCloud](https://sonarcloud.io/project/overview?id=EderCuer_projeto-cypress)
+
+![projeto no sonarcloud](https://i.ibb.co/rv2K5SC/Captura-de-tela-2024-09-22-201819.png)
+ 
